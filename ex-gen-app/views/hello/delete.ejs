@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+    <head>
+        <meta http-equiv="content-type" content="text/html" charset="UTF-8">
+        <title><%= title %> </title>
+        <link rel="stylesheet" href="../stylesheets/style.css">
+    </head>
+
+    <body>
+
+        <head><%= title %> </head>
+        <div role="main">
+            <p><%= content %> </p>
+                <table>
+                    <tr>
+                        <th>NAME</th>
+                        <td><%= mydata.name %></td>
+                    </tr>
+                    <tr>
+                        <th>MAIL</th>
+                        <td><%= mydata.mail %></td>
+                    </tr>
+                    <tr>
+                        <th>AGE</th>
+                        <td><%= mydata.age %></td>
+                    </tr>
+                </table>
+                    <form method = "post" action="/hello/delete">
+                        <input type="hidden" name="id" value="<%= mydata.id %> ">
+                        <p><input type="submit" value = "削除"></p>
+                    </form>
+        </div>
+    </body>
+
+</html>
