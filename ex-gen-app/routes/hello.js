@@ -5,18 +5,32 @@ var sqlite3 = require('sqlite3');
 
 var db = new sqlite3.Database('mydb.sqlite3');
 
+var knex = require('knex')({
+    dialect: 'sqlite3',
+    connection: {
+        filename: 'mydb.sqlite3'
+    },
+    useNullAsDefault: true
+});
+
+var Bookshelf = require('bookshelf')(knex);
+
+var Mydata = Bookshelf.Model.extend({
+    tableName: 'mydata'
+});
+
+
 router.get('/', (req, res, next) => {
-    db.serialize(() => {
-        db.all("select * from mydata", (err, rows) => {
-            if (!err) {
-                var data = {
-                    title: 'Hello!',
-                    content: rows
-                };
-                res.render('hello/index', data);
-            }
+    new Mydata().fetchAll().then((collection) => {
+        var data = {
+            title: 'Hello!',
+            content: collection.toArray()
+        }
+        res.render('hello/index', data);
+    })
+        .catch((err) => {
+            res.status(500).json({ error: true, data: { message: err.message } });
         });
-    });
 });
 
 router.get('/add', (req, res, next) => {
