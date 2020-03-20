@@ -44,37 +44,9 @@ router.get('/add', (req, res, next) => {
 
 router.post('/add', (req, res, next) => {
     var response = res;
-    req.check('name', 'NAME は必ず入力してください．').notEmpty();
-    req.check('mail', 'MAIL  はメールアドレスを記入して下さい').isEmail();
-    req.check('age', 'AGE は年齢（整数）を入力してください').isInt();
-    req.getValidationResult().then((result) => {
-        if (!result.isEmpty()) {
-            var res = '<ul class = "error" >';
-            var result_arr = result.array();
-            for (var n in result_arr) {
-                res += '<li>' + result_arr[n].msg + '</li>';
-            }
-            res += '</ul>';
-            var data = {
-                title: 'Hello/Add',
-                content: res,
-                form: req.body
-            }
-            response.render('hello/add', data);
-        } else {
-           var nm = req.body.name;
-           var ml = req.body.mail;
-           var ag = req.body.age;
-           db.run(
-                "insert into mydata (name,mail,age) values (?,?,?)",
-                nm,
-                ml,
-                ag
-           );
-           res.redirect("/hello"); 
-        }
+    new Mydata(req.body).save().then((model) => {
+        response.redirect('/hello');
     });
-    
 });
 
 router.get('/show', (req, res, next) => {
