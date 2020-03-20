@@ -15,13 +15,13 @@ var knex = require('knex')({
 
 var Bookshelf = require('bookshelf')(knex);
 
-var Mydata = Bookshelf.Model.extend({
+var MyData = Bookshelf.Model.extend({
     tableName: 'mydata'
 });
 
 
 router.get('/', (req, res, next) => {
-    new Mydata().fetchAll().then((collection) => {
+    new MyData().fetchAll().then((collection) => {
         var data = {
             title: 'Hello!',
             content: collection.toArray()
@@ -44,7 +44,7 @@ router.get('/add', (req, res, next) => {
 
 router.post('/add', (req, res, next) => {
     var response = res;
-    new Mydata(req.body).save().then((model) => {
+    new MydData(req.body).save().then((model) => {
         response.redirect('/hello');
     });
 });
@@ -118,6 +118,29 @@ router.post('/delete', (req, res, next) => {
     var q = "delete from mydata where id = ?";
     db.run(q, id);
     res.redirect('/hello');
+});
+
+router.get('/find', (req, res, next) => {
+    var data = {
+        title: '/Hello/Find',
+        content: '検索IDを入力 :',
+        form: { fstr: '' },
+        mydata: null
+    };
+    res.render('hello/find', data);
+});
+
+router.post('/find', (req, res, next) => {
+    new MyData().where('id', '=', req.body.fstr).fetch().
+        then((collection) => {
+            var data = {
+                title: 'Hello!',
+                content: '※id = ' + req.body.fstr + '　の検索結果: ',
+                form: req.body,
+                mydata: collection
+            };
+            res.render('hello/find', data);
+        });
 });
 
 module.exports = router;
