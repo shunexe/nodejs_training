@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
+    <head><h1><%= title %></h1></head>
+    <div>
+      <% if (login !=undefined){%> 
+        <h2>Welcome <%= login.name %>!!!</h2>
+      <% }else{ %>
+        <h2>Welcome To Our Board!!! To Submit your message,please log in!</h2>
+      <% } %> 
+      <form action="/" method="post">
+        <p><input type="text" name="msg" size="50"><input type="submit" value="送信"></p>
+      </form>
+      <hr>
+      <p>
+        <table style="width: 95%;">
+          <% for(var i in collection) { %>
+          <%- include('data_item',{val :collection[i]}) %>
+          <% } %>
+        </table>
+      </p>
+      <p>
+        <% if (pagination.page > 1) { %>
+        <span><a href="/page<%= pagination.page -1  %>">&lt;&lt; prev</a></span>
+        <% }else{ %>
+        <span>&lt;&lt; prev <%= pagination.page %> <%= pagination.pageCount %> </span>
+        <% } %>
+      
+        <% if (pagination.page < pagination.pageCount) { %>
+        <span><a href="/page<%= pagination.page + 1  %>">Next &gt;&gt;</a></span>
+        <% }else{ %>
+        <span>Next &gt;&gt;</span>
+        <% } %>
+        <p><a href="/users">LOGIN</a> <span><a href="/logout">LOGOUT</a></span></p>
+      </p>
+    </div>
+  </body>
+</html>
